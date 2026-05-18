@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поддержать Гостика | Стримы и качественный контент</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #060609;
+            --text-main: #f5f5f7;
+            --text-muted: #8e8e93;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            
+            /* Брендовые цвета */
+            --donatepay-color: #2ecc71;
+            --donationalerts-color: #f39c12;
+            --donatello-color: #2980b9;
+            --premium-purple: #8172f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Фоновое свечение */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 700px;
+            height: 700px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            filter: blur(150px);
+            opacity: 0.1;
+        }
+        body::before { background: var(--premium-purple); top: -200px; left: -200px; }
+        body::after { background: var(--donationalerts-color); bottom: -200px; right: -200px; }
+
+        .main-layout {
+            max-width: 1150px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 50px;
+            z-index: 1;
+        }
+
+        /* ================= ЛЕВАЯ КОЛОНКА ================= */
+        .left-column {
+            position: sticky;
+            top: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            padding: 32px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+        }
+
+        .avatar-box {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 25px rgba(129, 114, 243, 0.25);
+            background: #111;
+            overflow: hidden;
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .live-badge {
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--premium-purple);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(129,114,243,0.3);
+            z-index: 2;
+        }
+
+        .profile-card h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, #fff 40%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-card p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .info-sidebar {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.04) 0%, rgba(0,0,0,0) 100%);
+            border: 1px solid rgba(243, 156, 18, 0.15);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .info-sidebar-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #f39c12;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .info-sidebar p {
+            font-size: 13.5px;
+            color: #fddcb4;
+            line-height: 1.6;
+        }
+
+        /* ================= ПРАВАЯ КОЛОНКА ================= */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+        }
+
+        /* Радужная обводка вокруг DonatePay */
+        .card.dp {
+            border: 1px solid transparent;
+            background-image: linear-gradient(var(--bg-color), var(--bg-color)), 
+                              linear-gradient(to right, #ff7675, #f39c12, #2ecc71, #0984e3, #8172f3, #ff7675);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            background-size: 100% 100%, 300% auto;
+            animation: rainbow-border 6s linear infinite;
+        }
+        .card.dp:hover {
+            box-shadow: 0 15px 45px rgba(46, 204, 113, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .card.da:hover { border-color: var(--donationalerts-color); box-shadow: 0 15px 45px rgba(243, 156, 18, 0.05); transform: translateY(-2px); }
+        .card.dt:hover { border-color: var(--donatello-color); box-shadow: 0 15px 45px rgba(41, 128, 185, 0.05); transform: translateY(-2px); }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Блок с названием и бэйджем региона (в столбик) */
+        .title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .brand-logo-wrapper {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overflow: visible;
+        }
+
+        .brand-logo {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .flags-overlay {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            display: flex;
+            gap: 4px;
+        }
+
+        /* СТИЛИ ФЛАГОВ НА CSS */
+        .css-flag {
+            width: 18px;
+            height: 12px;
+            border-radius: 2px;
+            border: 1.5px solid var(--bg-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            display: inline-block;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .css-flag.ru { background: linear-gradient(to bottom, #ffffff 33.3%, #0033a0 33.3%, #0033a0 66.6%, #da291c 66.6%); }
+        .css-flag.eu { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 12' fill='%23ffcc00'><rect width='18' height='12' fill='%23003399'/><path d='M9,2.2 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M12.4,3.1 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M14.3,5.5 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M14.3,8.5 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M12.4,10.9 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M9,11.8 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M5.6,10.9 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M3.7,8.5 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M3.7,5.5 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z M5.6,3.1 l.1.3 h.3 l-.2.2 .1.3 -.3-.2 -.3.2 .1-.3 -.2-.2 h.3 z'/></svg>"); }
+        .css-flag.ua { background: linear-gradient(to bottom, #0057b7 50%, #ffd700 50%); }
+
+        .card-title { font-size: 22px; font-weight: 700; line-height: 1.2; }
+
+        /* Обычный бэдж региона */
+        .badge {
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+            width: max-content;
+        }
+
+        /* Премиум-плашка лучшего способа */
+        .best-method-badge {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(129, 114, 243, 0.1) 100%);
+            color: #5be996;
+            border: 1px solid rgba(46, 204, 113, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.1);
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .methods-list {
+            list-style: none;
+            margin-bottom: 28px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .card.dt .methods-list { grid-template-columns: 1fr; }
+
+        .methods-list li {
+            font-size: 14px;
+            color: #e4e4e7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.01);
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.01);
+        }
+
+        .methods-list li::before {
+            content: '';
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .card.dp .methods-list li::before { background: var(--donatepay-color); }
+        .card.da .methods-list li::before { background: var(--donationalerts-color); }
+        .card.dt .methods-list li::before { background: var(--donatello-color); }
+
+        /* Переливающийся текст и иконка */
+        .feature-alert {
+            font-size: 14.5px;
+            font-weight: 700;
+            margin-top: -16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(to right, #ff7675, #f39c12, #2ecc71, #0984e3, #a8a5ff, #ff7675);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: rainbow-text 3s linear infinite;
+        }
+
+        .feature-alert svg { 
+            stroke: currentColor; 
+            filter: drop-shadow(0 0 1px transparent); 
+        }
+
+        /* АНИМАЦИИ */
+        @keyframes rainbow-border {
+            0% { background-position: 0% center; }
+            100% { background-position: 300% center; }
+        }
+        @keyframes rainbow-text {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            border-radius: 14px;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .card.dp .btn { background: var(--donatepay-color); }
+        .card.dp .btn:hover { background: #27ae60; box-shadow: 0 8px 24px rgba(46, 204, 113, 0.3); }
+
+        .card.da .btn { background: var(--donationalerts-color); }
+        .card.da .btn:hover { background: #e67e22; box-shadow: 0 8px 24px rgba(243, 156, 18, 0.3); }
+
+        .card.dt .btn { background: var(--donatello-color); }
+        .card.dt .btn:hover { background: #2471a3; box-shadow: 0 8px 24px rgba(41, 128, 185, 0.3); }
+
+        /* ================= АДАПТИВНОСТЬ ================= */
+        @media (max-width: 950px) {
+            .main-layout { grid-template-columns: 1fr; gap: 32px; }
+            .left-column { position: relative; top: 0; }
+            .methods-list { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 580px) {
+            .card-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .best-method-badge { align-self: flex-start; width: 100%; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 30px 16px; }
+            .card { padding: 24px; }
+            .badge { align-self: flex-start; }
+            .profile-card h1 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-layout">
+        
+        <aside class="left-column">
+            
+            <div class="profile-card">
+                <div class="avatar-container">
+                    <div class="avatar-box">
+                        <img src="img/avatar.png" alt="Gostik">
+                    </div>
+                    <div class="live-badge">Стример</div>
+                </div>
+                <h1>Gostik</h1>
+                <p>Здарова! Заскочил поддержать? От души. Каждая копейка с донатов идет прямиком на продвижение канала, новое железо и улучшение качества стримов, чтобы контент был еще круче.</p>
+            </div>
+
+            <div class="info-sidebar">
+                <div class="info-sidebar-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    Не проходит оплата?
+                </div>
+                <p>Иногда сайты донатов могут лагать, а банки — временно отклонять карты из-за каких-то своих работ. Если платеж не идет, просто воспользуйся другим сервисом из списка справа.</p>
+            </div>
+
+            <div class="card dt">
+                <div class="card-header">
+                    <div class="logo-group">
+                        <div class="brand-logo-wrapper">
+                            <img src="img/logo-dt.png" alt="Donatello" class="brand-logo">
+                            <div class="flags-overlay">
+                                <span class="css-flag ua" title="UA"></span>
+                            </div>
+                        </div>
+                        <div class="title-block">
+                            <div class="card-title">Donatello</div>
+                            <div class="badge">Только Украина</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">Доступные способы оплаты</div>
+                <ul class="methods-list">
+                    <li>Украинские карты (Гривны)</li>
+                </ul>
+
+                <a href="https://donatello.to/gostiktyt" class="btn" target="_blank">Задонатить через Donatello</a>
+            </div>
+        </aside>
+
+        <main class="right-column">
+            
+            <div class="card dp">
+                <div class="card-header">
+                    <div class="logo-group">
+                        <div class="brand-logo-wrapper">
+                            <img src="img/logo-dp.png" alt="DonatePay" class="brand-logo">
+                            <div class="flags-overlay">
+                                <span class="css-flag ru" title="РФ"></span>
+                                <span class="css-flag eu" title="ЕС"></span>
+                            </div>
+                        </div>
+                        <div class="title-block">
+                            <div class="card-title">DonatePay</div>
+                            <div class="badge">РФ и Европа</div>
+                        </div>
+                    </div>
+                    <div class="best-method-badge">Самый удобный и лучший способ</div>
+                </div>
+
+                <div class="section-title">Доступные способы оплаты</div>
+                <ul class="methods-list">
+                    <li>USDT TRC-20</li>
+                    <li>Litecoin / Bitcoin</li>
+                    <li>Visa / MasterCard (RUB)</li>
+                    <li>Visa / MasterCard (USD)</li>
+                </ul>
+
+                <a href="https://donatepay.eu/don/gostik" class="btn" target="_blank">Задонатить через DonatePay</a>
+            </div>
+
+            <div class="card da">
+                <div class="card-header">
+                    <div class="logo-group">
+                        <div class="brand-logo-wrapper">
+                            <img src="img/logo-da.png" alt="DonationAlerts" class="brand-logo">
+                            <div class="flags-overlay">
+                                <span class="css-flag ru" title="РФ"></span>
+                            </div>
+                        </div>
+                        <div class="title-block">
+                            <div class="card-title">DonationAlerts</div>
+                            <div class="badge">Только РФ</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title">Доступные способы оплаты</div>
+                <ul class="methods-list">
+                    <li>Система быстрых платежей (СБП)</li>
+                    <li>Банковская карта (Рубли)</li>
+                    <li>Карты WorldWide</li>
+                </ul>
+
+                <div class="feature-alert">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    Можно выбрать уникальную озвучку доната!
+                </div>
+
+                <a href="https://www.donationalerts.com/r/gostiktyt" class="btn" target="_blank">Задонатить через DonationAlerts</a>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
