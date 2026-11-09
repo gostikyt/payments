@@ -146,7 +146,7 @@ a:focus-visible, summary:focus-visible { outline: 3px solid var(--purple); outli
 .perk::before { content: "✦ "; color: var(--accent); display: inline-block; animation: sparkle 2.2s ease-in-out infinite; }
 
 /* ============ ПОДСКАЗКА ============ */
-.help { margin-top: 26px; padding: 0 16px; background: #fff; border: 2px solid var(--line); border-radius: 16px; }
+.help { margin: 0 0 24px; padding: 0 16px; background: #fff; border: 2px solid var(--line); border-radius: 16px; }
 .help summary {
     display: flex; align-items: center; justify-content: space-between; gap: 14px;
     min-height: 56px; padding: 13px 0; cursor: pointer; list-style: none;
@@ -161,6 +161,45 @@ footer { margin-top: 30px; text-align: center; color: var(--muted); font-size: 1
 footer b { color: var(--purple-d); }
 .foot-star { display: inline-block; color: #d4a7f4; animation: sparkle 2s ease-in-out infinite; }
 
+/* ============ КРИПТА ============ */
+.crypto-section { margin-top: 34px; }
+.crypto-intro { max-width: 560px; margin: -8px 2px 16px; color: var(--muted); font-size: 13.5px; font-weight: 600; }
+.crypto { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.coin {
+    padding: 14px;
+    background: var(--card);
+    border: 2px solid var(--line); border-bottom-width: 5px; border-radius: 18px;
+    box-shadow: 0 3px 12px rgba(89, 66, 118, .08);
+    opacity: 0; transform: translateY(18px);
+    animation: card-in .6s var(--ease) forwards;
+    animation-delay: calc(var(--i, 0) * 100ms + 500ms);
+}
+.coin-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.coin-badge { width: 34px; height: 34px; flex: none; display: grid; place-items: center; border-radius: 11px; font-size: 19px; font-weight: 900; line-height: 1; }
+.coin-badge.usdt { background: #dff5ee; color: #1f9e7a; }
+.coin-badge.btc { background: #fff1d8; color: #ef9b16; }
+.coin-top strong { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 900; line-height: 1.25; }
+.coin-top small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 700; }
+.copy {
+    flex: none; border: 0; border-radius: 10px; padding: 8px 11px;
+    background: #efe5fc; color: #7050a5;
+    font: 800 12px "Trebuchet MS", system-ui, sans-serif; cursor: pointer;
+    transition: transform .15s, background .15s;
+}
+.copy:hover { background: #e5d5f8; transform: scale(1.04); }
+.copy:active { transform: scale(.97); }
+.copy:focus-visible { outline: 3px solid var(--purple); outline-offset: 2px; }
+.address { display: block; padding: 9px 10px; border-radius: 10px; background: #f8f5fb; color: #63556f; font: 11px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+
+.toast {
+    position: fixed; left: 50%; bottom: 20px; z-index: 5;
+    transform: translate(-50%, 18px); opacity: 0; pointer-events: none;
+    padding: 11px 16px; border: 2px solid #fff; border-radius: 14px;
+    background: var(--ink); color: #fff; font-size: 13px; font-weight: 800;
+    box-shadow: 0 5px 0 #1f1630; transition: .2s; max-width: calc(100vw - 24px); text-align: center;
+}
+.toast.show { transform: translate(-50%, 0); opacity: 1; }
+
 /* ============ АНИМАЦИИ ============ */
 @keyframes hero-in { from { opacity: 0; transform: translateY(18px); } }
 @keyframes card-in { to { opacity: 1; transform: none; } }
@@ -172,6 +211,7 @@ footer b { color: var(--purple-d); }
 /* ============ АДАПТИВНОСТЬ ============ */
 @media (max-width: 760px) {
     .grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .crypto { grid-template-columns: minmax(0, 1fr); }
     .card { flex-direction: column; }
 }
 @media (max-width: 420px) {
@@ -183,7 +223,7 @@ footer b { color: var(--purple-d); }
 }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-    .card { opacity: 1; transform: none; }
+    .card, .coin { opacity: 1; transform: none; }
 }
 </style>
 </head>
@@ -201,6 +241,11 @@ footer b { color: var(--purple-d); }
 
     <section aria-labelledby="donate-title">
         <h2 class="section-head" id="donate-title">Выбери способ</h2>
+
+        <details class="help">
+            <summary>Не проходит оплата?</summary>
+            <p>Сайты донатов иногда лагают, а банки временно отклоняют карты. Если платёж не идёт, попробуй другой сервис из списка ниже или отправь донат криптой.</p>
+        </details>
 
         <ul class="grid">
 
@@ -239,6 +284,7 @@ footer b { color: var(--purple-d); }
                         <li>Litecoin / Bitcoin</li>
                         <li>Visa / MC (RUB)</li>
                         <li>Visa / MC (USD)</li>
+                        <li>Карты EU</li>
                     </ul>
                 </a>
             </li>
@@ -251,10 +297,12 @@ footer b { color: var(--purple-d); }
                     </div>
                     <div>
                         <div class="name">Donatello</div>
-                        <span class="region"><i class="flag ua"></i>Только Украина</span>
+                        <span class="region"><i class="flag ua"></i><i class="flag eu"></i>Украина и Европа</span>
                     </div>
                     <ul class="methods">
                         <li>Украинские карты (гривны)</li>
+                        <li>Европейские карты</li>
+                        <li>Криптовалюта</li>
                     </ul>
                 </a>
             </li>
@@ -262,13 +310,48 @@ footer b { color: var(--purple-d); }
         </ul>
     </section>
 
-    <details class="help">
-        <summary>Не проходит оплата?</summary>
-        <p>Сайты донатов иногда лагают, а банки временно отклоняют карты. Если платёж не идёт, попробуй другой сервис из списка выше.</p>
-    </details>
+    <section class="crypto-section" aria-labelledby="crypto-title">
+        <h2 class="section-head" id="crypto-title">Донат криптой</h2>
+        <p class="crypto-intro">Подойдёт, если удобнее отправить напрямую на кошелёк. Доступность зависит от страны и площадки, где ты покупаешь криптовалюту.</p>
+        <div class="crypto">
+            <div class="coin" style="--i:0"><div class="coin-top"><span class="coin-badge usdt">₮</span><strong>USDT <small>Сеть TRC-20</small></strong><button class="copy" type="button" data-copy="TBagCyisG9DqjwRTLXvdXe5CSK48xJypk9">Копировать</button></div><code class="address">TBagCyisG9DqjwRTLXvdXe5CSK48xJypk9</code></div>
+            <div class="coin" style="--i:1"><div class="coin-top"><span class="coin-badge usdt">₮</span><strong>USDT <small>Сеть BEP-20</small></strong><button class="copy" type="button" data-copy="0x8371df6624c968Cc02448c66cF0702808d290F95">Копировать</button></div><code class="address">0x8371df6624c968Cc02448c66cF0702808d290F95</code></div>
+            <div class="coin" style="--i:2"><div class="coin-top"><span class="coin-badge btc">₿</span><strong>Bitcoin <small>Перевод напрямую</small></strong><button class="copy" type="button" data-copy="bc1qk97tvpgclsmpnjupwcyan5f3th3aufqd7zv7gd">Копировать</button></div><code class="address">bc1qk97tvpgclsmpnjupwcyan5f3th3aufqd7zv7gd</code></div>
+        </div>
+    </section>
 
     <footer><span class="foot-star">✦</span> Спасибо, что ты здесь! <b>Gostik</b> <span class="foot-star">✦</span></footer>
 
 </main>
+<div class="toast" role="status" aria-live="polite">Адрес скопирован! 🎉</div>
+<script>
+(function () {
+    var toast = document.querySelector('.toast'), timer;
+    document.querySelectorAll('.copy').forEach(function (b) {
+        b.addEventListener('click', function () {
+            var text = b.dataset.copy;
+            function done() {
+                toast.classList.add('show');
+                clearTimeout(timer);
+                timer = setTimeout(function () { toast.classList.remove('show'); }, 1700);
+            }
+            function fallback() {
+                var a = document.createElement('textarea');
+                a.value = text; a.style.position = 'fixed'; a.style.opacity = '0';
+                document.body.appendChild(a); a.select();
+                try { document.execCommand('copy') ? done() : manual(); } catch (e) { manual(); }
+                document.body.removeChild(a);
+            }
+            function manual() {
+                var old = b.textContent; b.textContent = 'Скопируй вручную';
+                setTimeout(function () { b.textContent = old; }, 1700);
+            }
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(done, fallback);
+            } else { fallback(); }
+        });
+    });
+})();
+</script>
 </body>
 </html>
